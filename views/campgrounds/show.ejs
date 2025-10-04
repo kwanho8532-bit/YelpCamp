@@ -1,0 +1,23 @@
+<%- layout('./layouts/boilerplate') %>
+
+    <h1>
+        <%= campground.title %>
+    </h1>
+
+    <h2>
+        <%= campground.description %>
+    </h2>
+
+    <h3>
+        <%= campground.location %>
+    </h3>
+
+    <div>
+        <% campground.reviews.forEach(r=> { %>
+            <li>
+                <%= r.user.username %> - <%= r.content %>
+            </li>
+            <% }) %>
+    </div>
+
+    <a href="/campgrounds">Campgrounds</a>
