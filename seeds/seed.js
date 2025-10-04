@@ -58,6 +58,13 @@ const reviewContents = [
 
 // Seed 함수
 const seedDB = async () => {
+
+    // 환경변수 RUN_SEED가 true일 때만 실행
+    if (process.env.RUN_SEED !== "true") {
+        console.log("🔒 Seed 실행이 비활성화 되어 있음");
+        return;
+    }
+
     await Campground.deleteMany({});
     await Review.deleteMany({});
     await User.deleteMany({});
