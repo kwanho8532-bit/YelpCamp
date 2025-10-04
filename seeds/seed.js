@@ -117,4 +117,5 @@ const seedDB = async () => {
 seedDB().then(() => {
     mongoose.connection.close();
     console.log("✅ MongoDB 연결 종료");
+    process.exit(0); // 반드시 추가
 });
