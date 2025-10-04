@@ -3,7 +3,10 @@ const Campground = require('../models/campgrounds')
 const Review = require('../models/reviews')
 const User = require('../models/users')
 
-mongoose.connect('mongodb://127.0.0.1:27017/render')
+const dbUrl = process.env.DB_URL
+
+// mongoose.connect('mongodb://127.0.0.1:27017/render')
+mongoose.connect(dbUrl)
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
