@@ -119,3 +119,21 @@ seedDB().then(() => {
     console.log("✅ MongoDB 연결 종료");
     process.exit(0); // 반드시 추가
 });
+
+// process.exit(code) 의미
+
+// 1. process.exit(code)
+// Node.js에서 현재 실행 중인 스크립트를 종료
+// code 값은 종료 상태를 나타냄
+// 0 → 정상 종료
+// 1 (또는 다른 0이 아닌 값) → 에러 발생 종료
+
+// 2. 왜 seed 스크립트에서 필요한가?
+// Render에서 Pre-Deploy Command로 node seeds/seed.js를 실행할 때,
+// 스크립트가 async 작업(await save()) 후에도 프로세스가 완전히 종료되지 않으면 Render가 Start Command로 넘어가지 못할 수 있음
+
+// process.exit(0)를 넣으면 MongoDB 연결을 닫은 뒤 확실히 프로세스를 종료
+// → Pre-Deploy Command가 끝나고 앱이 정상적으로 시작됨
+
+// 주의
+// process.exit()는 강제 종료이므로, 종료 전에 꼭 필요한 작업(mongoose.connection.close() 등)을 끝내야 함

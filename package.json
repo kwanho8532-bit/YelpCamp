@@ -20,6 +20,7 @@
   "homepage": "https://github.com/kwanho8532-bit/YelpCamp#readme",
   "description": "",
   "dependencies": {
+    "basic-auth": "^2.0.1",
     "dotenv": "^17.2.3",
     "ejs": "^3.1.10",
     "ejs-mate": "^4.0.0",
