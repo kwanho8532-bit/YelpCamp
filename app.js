@@ -22,6 +22,7 @@ if (process.env.PRIVATE_MODE === 'true') {
             res.set('WWW-Authenticate', 'Basic realm="Private Area"')
             return res.status(401).send('Access denied')
         }
+        next()
     })
 }
 
