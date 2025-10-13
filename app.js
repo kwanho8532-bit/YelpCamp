@@ -36,8 +36,8 @@ if (process.env.PRIVATE_MODE === 'true') {
 
 const dbUrl = process.env.DB_URL
 
-mongoose.connect('mongodb://127.0.0.1:27017/render')
-// mongoose.connect(dbUrl)
+// mongoose.connect('mongodb://127.0.0.1:27017/render')
+mongoose.connect(dbUrl)
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -95,5 +95,3 @@ app.use((err, req, res, next) => {
 app.listen(2000, () => {
     console.log(`Listening on the 2000`)
 })
-
-// 리뷰 모델 관련 기능 추가
