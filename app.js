@@ -88,10 +88,10 @@ app.use((err, req, res, next) => {
     res.status(status).render('error', { err })
 })
 
-// const port = process.env.PORT || 1200
-// app.listen(port, () => {
-//     console.log(`Listening on the ${port}`)
-// })
-app.listen(2000, () => {
-    console.log(`Listening on the 2000`)
+const port = process.env.PORT || 1200
+app.listen(port, () => {
+    console.log(`Listening on the ${port}`)
 })
+// app.listen(2000, () => {
+//     console.log(`Listening on the 2000`)
+// })
