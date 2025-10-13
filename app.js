@@ -10,9 +10,12 @@ const Campground = require('./models/campgrounds')
 const Review = require('./models/reviews')
 const User = require('./models/users')
 const ExpressError = require('./utils/ExpressError.js')
+const session = require('express-session')
+const flash = require('connect-flash')
 
 // router
-const campgroundRouter = require('./router/campground/campground.js')
+const campgroundRouter = require('./router/campground.js')
+const reviewRouter = require('./router/review.js')
 
 // 🔒 Basic Auth 적용 (개발 중이거나 PRIVATE_MODE=true일 때만)
 if (process.env.PRIVATE_MODE === 'true') {
@@ -51,7 +54,25 @@ app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
+const sessionConfig = {
+    secret: 'thisissecret',
+    resave: false,
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}
+app.use(session(sessionConfig))
+app.use(flash())
+
+app.use((req, res, next) => {
+    res.locals.success = req.flash('success')
+    next()
+})
+
 app.use('/campgrounds', campgroundRouter)
+app.use('/campgrounds/:id/review', reviewRouter)
 
 app.get('/', (req, res) => {
     res.render('campgrounds/home')
@@ -74,3 +95,5 @@ app.use((err, req, res, next) => {
 app.listen(2000, () => {
     console.log(`Listening on the 2000`)
 })
+
+// 리뷰 모델 관련 기능 추가
