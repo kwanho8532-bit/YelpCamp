@@ -1,0 +1,41 @@
+<%- layout('./layouts/boilerplate') %>
+
+    <div class="row justify-content-center my-4">
+        <div class="col-8">
+            <h1 class="text-center mb-3">Edit Campground</h1>
+            <form action="/campgrounds/<%= campground._id %>?_method=PATCH" method="POST" class="needs-validation"
+                novalidate>
+                <div class="mb-3">
+                    <label for="title" class="form-label">Title</label>
+                    <input type="text" class="form-control" name="campground[title]" id="title" required
+                        value="<%= campground.title %>">
+                    <div class="valid-feedback">Looks Good!</div>
+                    <div class="invalid-feedback">Invalid Title</div>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <textarea class="form-control" id="description" name="campground[description]" rows="3"
+                        required><%= campground.description %></textarea>
+                    <div class="valid-feedback">Looks Good!</div>
+                    <div class="invalid-feedback">Invalid Description</div>
+                </div>
+                <div class="mb-3">
+                    <label for="location" class="form-label">Location</label>
+                    <input type="text" class="form-control" name="campground[location]" id="location" required
+                        value="<%= campground.location %>">
+                    <div class="valid-feedback">Looks Good!</div>
+                    <div class="invalid-feedback">Invalid Location</div>
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">Price</label>
+                    <input type="text" class="form-control" name="campground[price]" id="price" required
+                        value="<%= campground.price %>">
+                    <div class="valid-feedback">Looks Good!</div>
+                    <div class="invalid-feedback">Invalid Price</div>
+                </div>
+                <button class="btn btn-primary d-block w-100">Submit</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/js/formValidate.js"></script>

@@ -92,6 +92,7 @@ const seedDB = async () => {
             title: `${sample(descriptors)} ${sample(places)}`,
             description: sample(descriptions),
             author: randomAuthor._id,
+            // images: []
             location: `경상남도 ${randomCity}`,
             price: Math.floor(Math.random() * 40000) + 10000
         });

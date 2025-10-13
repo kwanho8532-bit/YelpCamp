@@ -2,12 +2,17 @@ const express = require('express')
 const app = express()
 const path = require('path')
 const mongoose = require('mongoose')
+const methodOverride = require('method-override')
 const ejs = require('ejs')
 const ejsMate = require('ejs-mate')
 const auth = require('basic-auth')
 const Campground = require('./models/campgrounds')
 const Review = require('./models/reviews')
 const User = require('./models/users')
+const ExpressError = require('./utils/ExpressError.js')
+
+// router
+const campgroundRouter = require('./router/campground/campground.js')
 
 // 🔒 Basic Auth 적용 (개발 중이거나 PRIVATE_MODE=true일 때만)
 if (process.env.PRIVATE_MODE === 'true') {
@@ -28,8 +33,8 @@ if (process.env.PRIVATE_MODE === 'true') {
 
 const dbUrl = process.env.DB_URL
 
-// mongoose.connect('mongodb://127.0.0.1:27017/render')
-mongoose.connect(dbUrl)
+mongoose.connect('mongodb://127.0.0.1:27017/render')
+// mongoose.connect(dbUrl)
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -40,34 +45,32 @@ db.once("open", () => {
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(express.static(path.join(__dirname, 'public')))
+app.use(methodOverride('_method'))
 
 app.engine('ejs', ejsMate)
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
+app.use('/campgrounds', campgroundRouter)
+
 app.get('/', (req, res) => {
     res.render('campgrounds/home')
 })
 
-app.get('/campgrounds', async (req, res) => {
-    const campgrounds = await Campground.find({})
-    console.log(campgrounds)
-    res.render('campgrounds/campgrounds', { campgrounds })
+app.use((req, res, next) => {
+    next(new ExpressError('Page Not Found', 404))
 })
 
-app.get('/campgrounds/:id', async (req, res) => {
-    const { id } = req.params
-    const campground = await Campground.findById(id).populate({
-        path: 'reviews',
-        populate: {
-            path: 'user'
-        }
-    })
-    console.log(campground)
-    res.render('campgrounds/show', { campground })
+app.use((err, req, res, next) => {
+    const { status = 500 } = err
+    if (!err.message) err.message = 'Oh No, Something Went Wrong!'
+    res.status(status).render('error', { err })
 })
 
-const port = process.env.PORT || 1200
-app.listen(port, () => {
-    console.log(`Listening on the ${port}`)
+// const port = process.env.PORT || 1200
+// app.listen(port, () => {
+//     console.log(`Listening on the ${port}`)
+// })
+app.listen(2000, () => {
+    console.log(`Listening on the 2000`)
 })

@@ -1,23 +1,48 @@
 <%- layout('./layouts/boilerplate') %>
 
-    <h1>
-        <%= campground.title %>
-    </h1>
-
-    <h2>
-        <%= campground.description %>
-    </h2>
-
-    <h3>
-        <%= campground.location %>
-    </h3>
-
-    <div>
-        <% campground.reviews.forEach(r=> { %>
-            <li>
-                <%= r.user.username %> - <%= r.content %>
-            </li>
-            <% }) %>
+    <div class="row">
+        <div class="col-6">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= campground.title %>
+                    </h5>
+                    <p class="card-text">
+                        <%= campground.description %>
+                    </p>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item text-muted">
+                        <%= campground.location %>
+                    </li>
+                    <li class="list-group-item">
+                        \<%= campground.price %>/night
+                    </li>
+                    <li class="list-group-item">
+                        Submitted By kim
+                        <!-- Submitted By 여기 post를 만든 유저명이 들어가는데 passport이후 만들거임 -->
+                    </li>
+                    <li class="list-group-item">
+                        <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-info">Edit</a>
+                        <form action="/campgrounds/<%= campground._id %>?_method=DELETE" method="POST" class="d-inline">
+                            <button class="btn btn-danger">Delete</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-6">
+            <h3>Reviews</h3>
+            <form action="" class="mb-3">
+                <div class="mb-3">
+                    <label for="review" class="form-label"></label>
+                    <textarea class="form-control" id="review" name="review" rows="3"></textarea>
+                </div>
+                <button class="btn btn-primary btn-sm">Submit</button>
+            </form>
+            <hr>
+            <!-- 여기 원래 author스키마가 있다고 생각하고 리뷰를 생성한 유저명과 review content를 렌더링 했었는데
+                나중에 passport로 인증&권한을 주고나서 다시 만들거임 -->
+        </div>
     </div>
-
     <a href="/campgrounds">Campgrounds</a>

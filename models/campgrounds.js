@@ -10,10 +10,16 @@ const campgroundSchema = new Schema({
         type: String,
         required: true
     },
-    author: {
-        type: Schema.Types.ObjectId,
-        ref: 'User'
-    },
+    // images: [
+    //     {
+    //         url: String,
+    //         filename: String
+    //     }
+    // ],
+    // author: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'User'
+    // },
     location: {
         type: String,
         required: true

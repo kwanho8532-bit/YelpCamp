@@ -2,14 +2,20 @@
 
     <h1>Campgrounds</h1>
 
-    <a href="/new">New Campground</a>
+    <a href="/campgrounds/new" class="btn btn-primary d-block w-100 my-3">New Campground</a>
 
-    <ul>
-        <% for (let camp of campgrounds) { %>
-            <li>
-                <a href="/campgrounds/<%= camp._id %>">
+    <% for (let camp of campgrounds) { %>
+        <div class="card mb-3">
+            <img src="https://images.unsplash.com/photo-1533575770077-052fa2c609fc?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                class="card-img-top" alt="...">
+            <div class="card-body">
+                <h5 class="card-title">
                     <%= camp.title %>
-                </a>
-            </li>
-            <% } %>
-    </ul>
+                </h5>
+                <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem saepe
+                    voluptatibus fugit dicta aliquam. Ipsum at totam exercitationem nesciunt soluta unde
+                    laudantium aliquid quibusdam. Numquam perspiciatis possimus unde maxime quia?</p>
+                <a href="/campgrounds/<%= camp._id %>" class="btn btn-primary">View <%= camp.title %></a>
+            </div>
+        </div>
+        <% } %>
