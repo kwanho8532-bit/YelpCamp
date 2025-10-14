@@ -2,8 +2,20 @@ const express = require('express')
 const router = express.Router({ mergeParams: true })
 const Campground = require('../models/campgrounds')
 const Review = require('../models/reviews')
+const { reviewSchema } = require('../schema')
+const reviews = require('../models/reviews')
 
-router.post('/', async (req, res) => {
+function validateReview(req, res, next) {
+    const { error } = reviewSchema.validate(req.body)
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next()
+    }
+}
+
+router.post('/', validateReview, async (req, res) => {
     // console.log(req.body.review)
     const { id } = req.params
     const { review } = req.body

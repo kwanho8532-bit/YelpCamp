@@ -2,6 +2,19 @@ const Campground = require('../models/campgrounds')
 const express = require('express')
 const router = express.Router()
 const catchAsync = require('../utils/catchAsync')
+const { campgroundSchema } = require('../schema')
+const ExpressError = require('../utils/ExpressError')
+
+function validateCampground(req, res, next) {
+    const { error } = campgroundSchema.validate(req.body)
+    if (error) {
+        const msg = error.details.map(el => el.message).join(',')
+        throw new ExpressError(msg, 400)
+    } else {
+        next()
+    }
+}
+// passport 인증, 권한 부여 기능 구현
 
 // campground
 router.get('/', catchAsync(async (req, res) => {
@@ -15,7 +28,7 @@ router.get('/new', (req, res) => {
     res.render('campgrounds/new')
 })
 
-router.post('/new', catchAsync(async (req, res) => {
+router.post('/new', validateCampground, catchAsync(async (req, res) => {
     // console.log(req.body.campground)
     const { campground } = req.body
     const newCamp = new Campground(campground)
@@ -45,7 +58,7 @@ router.get('/:id/edit', catchAsync(async (req, res) => {
     res.render('campgrounds/edit.ejs', { campground })
 }))
 
-router.patch('/:id', catchAsync(async (req, res) => {
+router.patch('/:id', validateCampground, catchAsync(async (req, res) => {
     console.log(req.body.campground)
     const { id } = req.params
     const campground = await Campground.findByIdAndUpdate(id, req.body.campground)

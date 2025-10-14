@@ -1,0 +1,28 @@
+<%- layout('./layouts/boilerplate') %>
+
+    <div class="row justify-content-center">
+        <div class="col-8">
+            <h1 class="text-center mb-3">Login</h1>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <form action="/login" method="POST" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" class="form-control" name="username" id="username" required>
+                            <div class="valid-feedback">Looks Good!</div>
+                            <div class="invalid-feedback">Invalid Username!</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" class="form-control" name="password" id="password" required>
+                            <div class="valid-feedback">Looks Good!</div>
+                            <div class="invalid-feedback">Invalid Password!</div>
+                        </div>
+                        <button class="btn btn-primary d-block w-100">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/formValidate.js"></script>
