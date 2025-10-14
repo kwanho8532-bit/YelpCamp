@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 const User = require('../models/users')
 const passport = require('passport')
+const { returnBack } = require('../middleware')
 
 router.get('/register', (req, res) => {
     res.render('users/register')
@@ -23,9 +24,10 @@ router.get('/login', (req, res) => {
     res.render('users/login')
 })
 
-router.post('/login', passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res, next) => {
+router.post('/login', returnBack, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), (req, res, next) => {
+    const returnUrl = res.locals.returnBack || '/campgrounds'
     req.flash('success', '로그인 성공')
-    res.redirect('/campgrounds')
+    res.redirect(returnUrl)
 })
 
 router.get('/logout', (req, res, next) => {
@@ -37,3 +39,5 @@ router.get('/logout', (req, res, next) => {
 })
 
 module.exports = router
+
+// author 스키마 활성화했으니까 관련 권한 기능 구현하기

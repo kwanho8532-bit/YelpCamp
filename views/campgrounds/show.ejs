@@ -19,8 +19,10 @@
                         \<%= campground.price %>/night
                     </li>
                     <li class="list-group-item">
-                        Submitted By kim
-                        <!-- Submitted By 여기 post를 만든 유저명이 들어가는데 passport이후 만들거임 -->
+                        Submitted By
+                        <b>
+                            <%= campground.author.username %>
+                        </b>
                     </li>
                     <li class="list-group-item">
                         <a href="/campgrounds/<%= campground._id %>/edit" class="btn btn-info">Edit</a>
@@ -33,43 +35,48 @@
         </div>
         <div class="col-6">
             <h3>Reviews</h3>
-            <form action="/campgrounds/<%= campground._id %>/review" method="POST" class="mb-3">
-                <fieldset class="starability-basic">
-                    <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked
-                        aria-label="No rating." />
-                    <input type="radio" id="first-rate1" name="review[rating]" value="1" />
-                    <label for="first-rate1" title="Terrible">1 star</label>
-                    <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                    <label for="first-rate2" title="Not good">2 stars</label>
-                    <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                    <label for="first-rate3" title="Average">3 stars</label>
-                    <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                    <label for="first-rate4" title="Very good">4 stars</label>
-                    <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                    <label for="first-rate5" title="Amazing">5 stars</label>
-                </fieldset>
-                <div class="mb-3">
-                    <label for="content" class="form-label"></label>
-                    <textarea class="form-control" id="content" name="review[content]" rows="3"></textarea>
-                </div>
-                <button class="btn btn-primary btn-sm">Submit</button>
-            </form>
-            <hr>
-            <!-- 여기 원래 author스키마가 있다고 생각하고 리뷰를 생성한 유저명과 review content를 렌더링 했었는데
-                나중에 passport로 인증&권한을 주고나서 다시 만들거임 -->
-
-            <% for(let review of campground.reviews) { %>
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <p class="starability-result" data-rating="<%= review.rating %>"></p>
-                        <%= review.content %>
-                            <form action="/campgrounds/<%= campground._id %>/review/<%= review._id %>?_method=DELETE"
-                                method="POST">
-                                <button class="btn btn-danger btn-sm">Delete</button>
-                            </form>
+            <% if (currentUser) { %>
+                <form action="/campgrounds/<%= campground._id %>/review" method="POST" class="mb-3">
+                    <fieldset class="starability-basic">
+                        <input type="radio" id="no-rate" class="input-no-rate" name="review[rating]" value="0" checked
+                            aria-label="No rating." />
+                        <input type="radio" id="first-rate1" name="review[rating]" value="1" />
+                        <label for="first-rate1" title="Terrible">1 star</label>
+                        <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                        <label for="first-rate2" title="Not good">2 stars</label>
+                        <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                        <label for="first-rate3" title="Average">3 stars</label>
+                        <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                        <label for="first-rate4" title="Very good">4 stars</label>
+                        <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                        <label for="first-rate5" title="Amazing">5 stars</label>
+                    </fieldset>
+                    <div class="mb-3">
+                        <label for="content" class="form-label"></label>
+                        <textarea class="form-control" id="content" name="review[content]" rows="3"></textarea>
                     </div>
-                </div>
+                    <button class="btn btn-primary btn-sm">Submit</button>
+                </form>
                 <% } %>
+                    <hr>
+                    <% for(let review of campground.reviews) { %>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-subtitle mb-2 text-muted">
+                                    <%= review.user.username %>
+                                </h5>
+                                <p class="starability-result" data-rating="<%= review.rating %>"></p>
+                                <p class="lead fs-6">
+                                    <%= review.content %>
+                                </p>
+                                <form
+                                    action="/campgrounds/<%= campground._id %>/review/<%= review._id %>?_method=DELETE"
+                                    method="POST">
+                                    <button class="btn btn-danger btn-sm">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                        <% } %>
         </div>
     </div>
     <a href="/campgrounds">Campgrounds</a>

@@ -39,8 +39,8 @@ if (process.env.PRIVATE_MODE === 'true') {
 
 const dbUrl = process.env.DB_URL
 
-// mongoose.connect('mongodb://127.0.0.1:27017/render')
-mongoose.connect(dbUrl)
+mongoose.connect('mongodb://127.0.0.1:27017/render')
+// mongoose.connect(dbUrl)
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error:"));
@@ -79,6 +79,7 @@ passport.deserializeUser(User.deserializeUser())
 app.use((req, res, next) => {
     res.locals.currentUser = req.user
     res.locals.success = req.flash('success')
+    res.locals.error = req.flash('error')
     next()
 })
 
@@ -100,10 +101,10 @@ app.use((err, req, res, next) => {
     res.status(status).render('error', { err })
 })
 
-const port = process.env.PORT || 1200
-app.listen(port, () => {
-    console.log(`Listening on the ${port}`)
-})
-// app.listen(2000, () => {
-//     console.log(`Listening on the 2000`)
+// const port = process.env.PORT || 1200
+// app.listen(port, () => {
+//     console.log(`Listening on the ${port}`)
 // })
+app.listen(2000, () => {
+    console.log(`Listening on the 2000`)
+})
