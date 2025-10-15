@@ -1,4 +1,6 @@
 const { campgroundSchema, reviewSchema } = require('./schema')
+const Campground = require('./models/campgrounds')
+const Review = require('./models/reviews')
 
 function validateCampground(req, res, next) {
     const { error } = campgroundSchema.validate(req.body)
@@ -37,10 +39,33 @@ function returnBack(req, res, next) {
     next()
 }
 
+async function isAuthor(req, res, next) {
+    const { id } = req.params
+    const campground = await Campground.findById(id)
+    if (!campground.author.equals(req.user._id)) {
+        req.flash('error', '접근 권한이 없습니다.')
+        return res.redirect(`/campgrounds/${id}`)
+    } else {
+        next()
+    }
+}
+
+async function isReviewAuthor(req, res, next) {
+    const { id, reviewId } = req.params
+    const review = await Review.findById(reviewId)
+    if (!review.user.equals(req.user._id)) {
+        req.flash('error', '접근 권한이 없습니다.')
+        return res.redirect(`/campgrounds/${id}`)
+    } else {
+        next()
+    }
+}
+
 module.exports = {
     validateCampground,
     validateReview,
     isLoggedIn,
     returnBack,
-
+    isAuthor,
+    isReviewAuthor
 }

@@ -4,88 +4,27 @@ const router = express.Router()
 const catchAsync = require('../utils/catchAsync')
 const { campgroundSchema } = require('../schema')
 const ExpressError = require('../utils/ExpressError')
-const { validateCampground, isLoggedIn } = require('../middleware')
+const { validateCampground, isLoggedIn, isAuthor } = require('../middleware')
+const campgroundCtrl = require('../controller/campground')
 
-// 미들웨어파일 만들어서 미들웨어 관리, 권한(author스키마 적용) 부여 기능 구현
+// 이미지 업로드 로직 만들기 cloudinary, multer, carousel
 
 // campground
-router.get('/', catchAsync(async (req, res) => {
-    const campgrounds = await Campground.find({})
-    console.log(campgrounds)
-    res.render('campgrounds/campgrounds', { campgrounds })
-}))
+router.get('/', catchAsync(campgroundCtrl.renderCampgrounds))
 
 // new 
-router.get('/new', isLoggedIn, (req, res) => {
-    res.render('campgrounds/new')
-})
+router.route('/new')
+    .get(isLoggedIn, campgroundCtrl.renderNewForm)
+    .post(isLoggedIn, validateCampground, catchAsync(campgroundCtrl.createCampground))
 
-router.post('/new', isLoggedIn, validateCampground, catchAsync(async (req, res) => {
-    // console.log(req.body.campground)
-    const { campground } = req.body
-    const newCamp = new Campground(campground)
-    newCamp.author = req.user._id
-    await newCamp.save()
-    req.flash('success', '성공적으로 생성되었습니다.')
-    res.redirect('/campgrounds')
-}))
-
-// show
-router.get('/:id', catchAsync(async (req, res) => {
-    const { id } = req.params
-    const campground = await Campground.findById(id).populate({
-        path: 'reviews',
-        populate: {
-            path: 'user'
-        }
-    }).populate('author')
-    console.log(campground)
-    if (!campground) {
-        req.flash('error', '해당 문서를 찾지 못했습니다.')
-        return res.redirect('/campgrounds')
-    } else {
-        res.render('campgrounds/show', { campground })
-    }
-}))
+// show & edit & delete
+router.route('/:id')
+    .get(catchAsync(campgroundCtrl.showCampground))
+    .patch(isLoggedIn, isAuthor, validateCampground, catchAsync(campgroundCtrl.editCampground))
+    .delete(isLoggedIn, isAuthor, catchAsync(campgroundCtrl.deleteCampground))
 
 // edit
-router.get('/:id/edit', isLoggedIn, catchAsync(async (req, res) => {
-    const { id } = req.params
-    const campground = await Campground.findById(id)
-    if (!campground) {
-        req.flash('error', '해당 문서를 찾지 못했습니다.')
-        return res.redirect('/campgrounds')
-    } else {
-        res.render('campgrounds/edit.ejs', { campground })
-    }
-}))
-
-router.patch('/:id', isLoggedIn, validateCampground, catchAsync(async (req, res) => {
-    console.log(req.body.campground)
-    const { id } = req.params
-    const campground = await Campground.findByIdAndUpdate(id, req.body.campground)
-    if (!campground) {
-        req.flash('error', '수정하는 중 오류가 발생하였습니다.')
-        return res.redirect('/campgrounds')
-    } else {
-        req.flash('success', '성공적으로 수정되었습니다.')
-        res.redirect(`/campgrounds/${id}`)
-    }
-}))
-
-// delete
-router.delete('/:id', isLoggedIn, catchAsync(async (req, res) => {
-    const { id } = req.params
-    const campground = await Campground.findByIdAndDelete(id)
-    console.log(campground, 'deleted')
-    if (!campground) {
-        req.flash('error', '삭제하는 중 오류가 발생하였습니다.')
-        return res.redirect('/campgrounds')
-    } else {
-        req.flash('success', '성공적으로 삭제되었습니다.')
-        res.redirect('/campgrounds')
-    }
-}))
+router.get('/:id/edit', isLoggedIn, catchAsync(campgroundCtrl.renderEditForm))
 
 module.exports = router
 
