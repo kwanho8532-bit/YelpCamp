@@ -7,7 +7,7 @@ const userSchema = new Schema({
         type: String,
         required: true,
         unique: true
-    },
+    }
     // password는 나중에 passport할 때 passport-local-mongoose로 추가
 })
 

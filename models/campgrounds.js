@@ -1,6 +1,16 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
+const imagesSchema = new Schema({
+    url: String,
+    filename: String
+})
+
+imagesSchema.virtual('thumbnail')
+    .get(function () {
+        return this.url.replace('/upload', '/upload/w_200,h_150')
+    })
+
 const campgroundSchema = new Schema({
     title: {
         type: String,
@@ -10,12 +20,9 @@ const campgroundSchema = new Schema({
         type: String,
         required: true
     },
-    // images: [
-    //     {
-    //         url: String,
-    //         filename: String
-    //     }
-    // ],
+    images: [
+        imagesSchema
+    ],
     author: {
         type: Schema.Types.ObjectId,
         ref: 'User'

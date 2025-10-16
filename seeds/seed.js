@@ -92,7 +92,10 @@ const seedDB = async () => {
             title: `${sample(descriptors)} ${sample(places)}`,
             description: sample(descriptions),
             author: randomAuthor._id,
-            // images: []
+            images: [{
+                url: 'https://res.cloudinary.com/dcvfgmiw2/image/upload/v1760600490/yelp-Study/wxjzhlte7nnzp0kmptym.jpg',
+                filename: 'yelp-Study/wxjzhlte7nnzp0kmptym'
+            }],
             location: `경상남도 ${randomCity}`,
             price: Math.floor(Math.random() * 40000) + 10000
         });

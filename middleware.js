@@ -1,10 +1,17 @@
 const { campgroundSchema, reviewSchema } = require('./schema')
 const Campground = require('./models/campgrounds')
 const Review = require('./models/reviews')
+const ExpressError = require('./utils/ExpressError')
+const cloudinary = require('cloudinary').v2
 
-function validateCampground(req, res, next) {
+async function validateCampground(req, res, next) {
     const { error } = campgroundSchema.validate(req.body)
     if (error) {
+        if (req.files) {
+            for (let img of req.files) {
+                await cloudinary.uploader.destroy(img)
+            }
+        }
         const msg = error.details.map(el => el.message).join(',')
         throw new ExpressError(msg, 400)
     } else {
